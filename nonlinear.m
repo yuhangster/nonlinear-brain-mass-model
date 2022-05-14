@@ -41,7 +41,7 @@ x0 = zeros(1,8*L);
 tspan = [0 800];
 %plot and calculate the terms
 figure;
-AF = [0 0; 1/10 0];
+AF = [0 0; 10/10 0];
 for i = 1:4
     AF = AF*10;
     [t,x] = ode45(@(t,x) odefun(t, x, L, c(2), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL,delta), tspan, x0, opts);
