@@ -30,9 +30,10 @@ x0 = zeros(1,8*L);
 %plot and calculate the terms
 figure;
 for i = 1:length(c)
-    sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
+    sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(i), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
     subplot(2,2,i);
-    plot(sol.x, -(sol.yp(2,:) - sol.yp(3,:)));
+    plot(sol.x, (sol.y(2,:) - sol.y(3,:)));
+    title('c = ', c(i));
 end
 
 %% part 2
@@ -47,6 +48,6 @@ for i = 1:4
     AF = AF*10;
     sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
     subplot(2,2,i);
-    plot(sol.x, -(sol.y(2,:) - sol.y(3,:)),'r', sol.x, -(sol.y(10,:) - sol.y(11,:)),'k');
+    plot(sol.x, (sol.y(2,:) - sol.y(3,:)),'r', sol.x, (sol.y(10,:) - sol.y(11,:)),'k');
     title('foward = ', AF(2,1));
 end

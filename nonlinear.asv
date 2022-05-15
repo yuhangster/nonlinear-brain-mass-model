@@ -19,8 +19,7 @@ opts = odeset('MaxStep',1);
 AB=0;
 AL=0;
 
-% initialize the second column to the 1st column instead of zero
-% %% part 1
+%% part 1
 L = 1; %L is the total number of columns
 AF = 0;
 AB=0;
@@ -31,23 +30,23 @@ x0 = zeros(1,8*L);
 %plot and calculate the terms
 figure;
 for i = 1:length(c)
-    sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, @history, tspan, opts);
+    sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
     subplot(2,2,i);
-    plot(sol.x, (sol.y(2,:) - sol.x(3,:)));
+    plot(sol.x, -(sol.y(2,:) - sol.y(3,:)));
 end
 
-%% part 2
+% %% part 2
 % L = 2; 
 % x0 = zeros(1,8*L);
-% tspan = [0 800];
+% tspan = [0 600];
 % %plot and calculate the terms
 % figure;
 % AF = [0 0; 1 0];
 % lags = [delta delta];
 % for i = 1:4
 %     AF = AF*10;
-%     sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, @history, tspan, opts);
+%     sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, sol.y, tspan, opts);
 %     subplot(2,2,i);
-%     plot(sol.x, (sol.x(:,2) - sol.x(:,3)),'r', sol.x, (sol.x(:,10) - sol.x(:,11)),'k');
+%     plot(sol.x, -(sol.y(2,:) - sol.y(3,:)),'r', sol.x, -(sol.y(10,:) - sol.y(11,:)),'k');
 %     title('foward = ', AF(2,1));
 % end
