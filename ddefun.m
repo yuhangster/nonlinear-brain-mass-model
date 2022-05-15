@@ -7,26 +7,30 @@ function dydt = ddefun(t, x, Z, L, c, H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL)
     
     dydt = zeros(8*L,1);
     for i = 1:L
-        dydt(1+8*(i-1):8*i,1) = column(i, t, x, Z, u, c, H_e, Tao_e, H_i, Tao_i, gamma, AF,AB,AL);
+        dydt(1+8*(i-1):8*i,1) = column(L, i, t, x, Z, u, c, H_e, Tao_e, H_i, Tao_i, gamma, AF,AB,AL);
     end
 end
 
 % Ode funtcion for one column (8 by 1)
-function Ode = column(i, t, x, Z, u, c, H_e, Tao_e, H_i, Tao_i, gamma, AF,AB,AL)
+function Ode = column(L, i, t, x, Z, u, c, H_e, Tao_e, H_i, Tao_i, gamma, AF,AB,AL)
+    %simplify terms
     k = H_e/Tao_e;
     y = x(2+8*(i-1))-x(3+8*(i-1));
     %set up the equation
     dydt = zeros(8,1);
     dydt(1) = x(4+8*(i-1));
-    if i == 2
-        %the yj is the time delayed version 
-        %need to to be changed
-        xlag = Z(:,1);
-        yj = xlag(2) - xlag(3);
-        dydt(4) = k*( AF(2,1)*S(yj)+gamma(1)*(S(y)) )-2*x(4+8*(i-1))/Tao_e-x(1+8*(i-1))/(Tao_e^2);
-    else
-        dydt(4) = k*(c*u+gamma(1)*(S(y)))-2*x(4+8*(i-1))/Tao_e-x(1+8*(i-1))/(Tao_e^2);
-    end
+    %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%     xlag1 = Z(:,1);
+%     S_yj = zeros(L,1); 
+%     for k = 1:L
+%         tmp = xlag1(2+8*(k-1)) - xlag1(3+8*(k-1));
+%         S_yj(k,1) = S(tmp);
+%     end
+    %dydt(4) = k*( AF(i,1)*S_yj(1)+c(1,i)*u+gamma(1)*(S(y)))-2*x(4+8*(i-1))/Tao_e-x(1+8*(i-1))/(Tao_e^2);
+    xlag = Z(:,1);
+    yj = xlag(2) - xlag(3);
+    dydt(4) = k*( AF(i,1)*S(yj)+c(1,i)*u+gamma(1)*(S(y)))-2*x(4+8*(i-1))/Tao_e-x(1+8*(i-1))/(Tao_e^2);
+    %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     dydt(2) = x(5+8*(i-1));
     dydt(5) = k*( gamma(2)*(S(x(1+8*(i-1)))) )-2*x(5+8*(i-1))/Tao_e-x(2+8*(i-1))/(Tao_e^2);
     dydt(3) = x(6+8*(i-1));
