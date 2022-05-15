@@ -28,8 +28,12 @@ function Ode = column(L, i, t, x, Z, u, c, H_e, Tao_e, H_i, Tao_i, gamma, AF,AB,
 %     end
     %dydt(4) = k*( AF(i,1)*S_yj(1)+c(1,i)*u+gamma(1)*(S(y)))-2*x(4+8*(i-1))/Tao_e-x(1+8*(i-1))/(Tao_e^2);
     xlag = Z(:,1);
-    yj = xlag(2) - xlag(3);
-    dydt(4) = k*( AF(i,1)*S(yj)+c(1,i)*u+gamma(1)*(S(y)))-2*x(4+8*(i-1))/Tao_e-x(1+8*(i-1))/(Tao_e^2);
+    S_yj = zeros(L,1);
+    for tp = 1:L
+        yj = xlag(2+8*(tp-1)) - xlag(3+8*(tp-1));
+        S_yj(tp) = S(yj);
+    end
+    dydt(4) = k*( AF(i,:)*S_yj+c(1,i)*u+gamma(1)*(S(y)))-2*x(4+8*(i-1))/Tao_e-x(1+8*(i-1))/(Tao_e^2);
     %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     dydt(2) = x(5+8*(i-1));
     dydt(5) = k*( gamma(2)*(S(x(1+8*(i-1)))) )-2*x(5+8*(i-1))/Tao_e-x(2+8*(i-1))/(Tao_e^2);

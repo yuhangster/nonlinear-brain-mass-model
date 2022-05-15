@@ -20,26 +20,26 @@ AB=0;
 AL=0;
 
 %% part 1
-% L = 1; %L is the total number of columns
-% c = zeros(4,L);
-% for tp = 1:4
-%     c(tp,1) = 1000^(tp-1);
-% end
-% 
-% AF = 0;
-% AB=0;
-% AL=0;
-% tspan = [0 400];
-% lags = [delta];
-% x0 = zeros(1,8*L);
-% %plot and calculate the terms
-% figure;
-% for i = 1:length(c)
-%     sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(i,:), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
-%     subplot(2,2,i);
-%     plot(sol.x, (sol.y(2,:) - sol.y(3,:)));
-%     title('c = ', c(i));
-% end
+L = 1; %L is the total number of columns
+c = zeros(4,L);
+for tp = 1:4
+    c(tp,1) = 1000^(tp-1);
+end
+
+AF = 0;
+AB=0;
+AL=0;
+tspan = [0 400];
+lags = [delta];
+x0 = zeros(1,8*L);
+%plot and calculate the terms
+figure;
+for i = 1:length(c)
+    sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(i,:), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
+    subplot(2,2,i);
+    plot(sol.x, (sol.y(2,:) - sol.y(3,:)));
+    title('c = ', c(i));
+end
 
 %% part 2
 L = 2; 
@@ -62,19 +62,23 @@ for i = 1:4
 end
 
 %% part 3 5 consective AF only structure
-% L = 5; 
-% x0 = zeros(1,8*L);
-% tspan = [0 600];
-% %plot and calculate the terms
-% AF = [0 0; 40 0];
-% lags = [delta ];
-% sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
-% figure;
-% for i =1:L
-%     subplot(1,5,i);
-%     plot(sol.x, (sol.y(2+8*(i-1),:) - sol.y(3+8*(i-1),:)));
-%     title('Area ', i);
-% end
+L = 5; 
+c = zeros(4,L);
+for tp = 1:4
+    c(tp,1) = 1000^(tp-1);
+end
+x0 = zeros(1,8*L);
+tspan = [0 600];
+%plot and calculate the terms
+AF = [0 0 0 0 0; 40 0 0 0 0; 0 40 0 0 0; 0 0 40 0 0; 0 0 0 40 0];
+lags = [delta];
+sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2,:), H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
+figure;
+for i =1:L
+    subplot(1,5,i);
+    plot(sol.x, (sol.y(2+8*(i-1),:) - sol.y(3+8*(i-1),:)));
+    title('Area ', i);
+end
 
 
 %% part 4 Af and Ab
