@@ -14,10 +14,10 @@ function dydt = ddefun(t, x, Z, L, c,AF,AB,AL)
     
     %u - input signal
     t_imp = 10;
-    t_end = 2500;
+    t_end = 1000;
     u = interpU(t_imp, t_end, t);
-    %u  = interpRd(t_end,t);
     
+
     dydt = zeros(8*L,1);
     for i = 1:L
         dydt(1+8*(i-1):8*i,1) = column(L, i, x, Z, u, c, H_e, Tao_e, H_i, Tao_i, gamma, AF,AB,AL);
@@ -70,10 +70,10 @@ function signal = interpU(t_imp, t_end, t)
     %     end
 end
 
-function rd = interpRd(t_end,t)
-    ft = 0:100:t_end;
-     u = rand(1,length(ft))/5 - 0.1;
-    rd  = interp1(ft, u, t,'nearest');
+function rd = interpN(t_end,t)
+    ft = 0:1:t_end;
+    u = rand(2,1,length(ft));
+
 end
 
 % the function S for the fire rate 
