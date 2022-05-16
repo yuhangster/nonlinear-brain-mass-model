@@ -2,7 +2,7 @@
 % x is a 8 by 1 vector which is x1 ... x8 
 function dydt = ddefun(t, x, Z, L, c, H_e, Tao_e,H_i, Tao_i, gamma,AF,AB,AL)
     t_imp = 10;
-    t_end = 600;
+    t_end = 1000;
     u = interpU(t_imp, t_end, t);
     
     dydt = zeros(8*L,1);
@@ -26,13 +26,17 @@ function Ode = column(L, i, t, x, Z, u, c, H_e, Tao_e, H_i, Tao_i, gamma, AF,AB,
     %set up the equation
     dydt = zeros(8,1);
     dydt(1) = x(4+8*(i-1));
-    dydt(4) = k*( AF(i,:)*S_yj+c(1,i)*u+gamma(1)*(S(y)))-2*x(4+8*(i-1))/Tao_e-x(1+8*(i-1))/(Tao_e^2);
+    dydt(4) = k*( AF(i,:)*S_yj + AL(i,:)*S_yj + c(1,i)*u+gamma(1)*(S(y)))-2*x(4+8*(i-1))/Tao_e-x(1+8*(i-1))/(Tao_e^2);
     dydt(2) = x(5+8*(i-1));
-    dydt(5) = k*( gamma(2)*(S(x(1+8*(i-1)))) )-2*x(5+8*(i-1))/Tao_e-x(2+8*(i-1))/(Tao_e^2);
+
+    dydt(5) = k*( AB(i,:)*S_yj + AL(i,:)*S_yj + gamma(2)*(S(x(1+8*(i-1)))) )-2*x(5+8*(i-1))/Tao_e-x(2+8*(i-1))/(Tao_e^2);
+    
     dydt(3) = x(6+8*(i-1));
     dydt(6) = (H_i/Tao_i)*( gamma(4)*(S(x(7+8*(i-1)))) )-2*x(6+8*(i-1))/Tao_i-x(3+8*(i-1))/(Tao_i^2);
+   
     dydt(7) = x(8+8*(i-1));
-    dydt(8) = k*( gamma(3)*(S(y)) )-2*x(8+8*(i-1))/Tao_e-x(7+8*(i-1))/(Tao_e^2);
+
+    dydt(8) = k*( AB(i,:)*S_yj + AL(i,:)*S_yj + gamma(3)*(S(y)) )-2*x(8+8*(i-1))/Tao_e-x(7+8*(i-1))/(Tao_e^2);
 
     Ode = dydt;
 end
@@ -63,4 +67,5 @@ function fr = S(x)
     r = 0.56;
     fr = -e0 + 2*e0/(1+exp(-r*x));
 end
+
 
