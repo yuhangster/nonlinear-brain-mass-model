@@ -121,9 +121,10 @@ for i  = 2:2
     title('AL = ', AL(2,1,i));
 end
 
-writematrix( sol.x, "data-62-t.csv");
-writematrix( sol.y, "data-62-x.csv");
-writematrix( sol.yp, "data-62-xdot.csv");
+pad = zeros(8*L,1);
+%writematrix( [0 sol.x]', "data-62-t.csv");
+writematrix( [pad sol.y]', "data-62-x.csv");
+writematrix( [pad sol.yp]', "data-62-xdot.csv");
 
 %% part 7
 % L = 2;
