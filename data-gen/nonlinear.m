@@ -7,28 +7,28 @@ clc;
 delta = 10; % ms
 opts = odeset('MaxStep',1);
 %% part 1
-% L = 1; %L is the total number of columns
-% c = initC(L);
-% AF = 0;
-% AB=0;
-% AL=0;
-% tspan = [0 400];
-% lags = [delta];
-% %plot and calculate the terms
-% figure;
-% for i = 2:2
-%     sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(i,:),AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
-%     subplot(2,2,i);
-%     plot(sol.x, (sol.y(2,:) - sol.y(3,:)));
-%     title('c = ', c(i));
-% end
+L = 1; %L is the total number of columns
+c = initC(L);
+AF = 0;
+AB=0;
+AL=0;
+tspan = [0 400];
+lags = [delta];
+%plot and calculate the terms
+figure;
+for i = 2:2
+    sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(i,:),AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
+    subplot(2,2,i);
+    plot(sol.x, (sol.y(2,:) - sol.y(3,:)));
+    title('c = ', c(i));
+end
 % 
 % pad = zeros(8*L,1);
 % writematrix( [0 sol.x]', "data-12-t.csv");
 % writematrix( [pad sol.y]', "data-12-x.csv");
 % writematrix( [pad sol.yp]', "data-12-xdot.csv");
 
-% %% part 2
+%% part 2
 % L = 2; 
 % c = initC(L);
 % tspan = [0 600];
@@ -84,7 +84,7 @@ opts = odeset('MaxStep',1);
 %     title('AB = ', AB(1,2,i));
 % end
 % 
-% %% part 5 AL unidirectional
+%% part 5 AL unidirectional
 % L = 2;
 % c = initC(L);
 % tspan = [0 500];
@@ -105,32 +105,32 @@ opts = odeset('MaxStep',1);
 % end
 
 %% part 6 AL bidirectional
-L = 2;
-c = initC(L);
-tspan = [0 2000];
-%plot and calculate the terms
-figure;
-AF = zeros(L,L);
-AB = zeros(L,L);
-AL =zeros(L,L,5);
-AL(:,:,1) = [0 10; 10 0];  
-AL(:,:,2) = [0 20; 20 0];  
-AL(:,:,3) = [0 50; 50 0];  
-AL(:,:,4) = [0 200; 200 0];  
-AL(:,:,5) = [0 300; 300 0];  
-lags = [delta];
-for i  = 3:3
-    sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2,:),AF,AB,AL(:,:,i)), lags, @(t) history(t,L), tspan, opts);
-    subplot(2,3,i);
-    plot(sol.x, (sol.y(2,:) - sol.y(3,:)),'r', sol.x, (sol.y(10,:) - sol.y(11,:)),'k');
-    title('AL = ', AL(2,1,i));
-end
-
-
-pad = zeros(8*L,1);
-writematrix( [0 sol.x]', "data-63-t.csv");
-writematrix( [pad sol.y]', "data-63-x.csv");
-writematrix( [pad sol.yp]', "data-63-xdot.csv");
+% L = 2;
+% c = initC(L);
+% tspan = [0 2000];
+% %plot and calculate the terms
+% figure;
+% AF = zeros(L,L);
+% AB = zeros(L,L);
+% AL =zeros(L,L,5);
+% AL(:,:,1) = [0 10; 10 0];  
+% AL(:,:,2) = [0 20; 20 0];  
+% AL(:,:,3) = [0 50; 50 0];  
+% AL(:,:,4) = [0 200; 200 0];  
+% AL(:,:,5) = [0 300; 300 0];  
+% lags = [delta];
+% for i  = 3:3
+%     sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2,:),AF,AB,AL(:,:,i)), lags, @(t) history(t,L), tspan, opts);
+%     subplot(2,3,i);
+%     plot(sol.x, (sol.y(2,:) - sol.y(3,:)),'r', sol.x, (sol.y(10,:) - sol.y(11,:)),'k');
+%     title('AL = ', AL(2,1,i));
+% end
+% 
+% 
+% pad = zeros(8*L,1);
+% writematrix( [0 sol.x]', "data-63-t.csv");
+% writematrix( [pad sol.y]', "data-63-x.csv");
+% writematrix( [pad sol.yp]', "data-63-xdot.csv");
 
 %% part 7
 % L = 2;
