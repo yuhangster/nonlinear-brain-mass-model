@@ -31,19 +31,17 @@ figure;
 [tempy, tempt] = resample(sol.y(2,str:ed) - sol.y(3,str:ed),sol.x(str:ed),fs);
 plot(tempt,tempy,'ro',sol.x,sol.y(2,:) - sol.y(3,:),'k.');
 y = zeros(8,length(tempy));
-yp = zeros(8,length(tempy));
 for j = 1:8
-    [y(j,:),t]  = resample(sol.y(j,str:ed), sol.x(str:ed), fs);
-    [yp(j,:),t1]  = resample(sol.yp(j,str:ed), sol.x(str:ed), fs);
+    [,t]  = resample(sol.y(i,str:ed), sol.x(str:ed), fs);
 end
 figure;
-%800 & 11220 from reading the t value
-plot(t(800:11220), y(2,800:11220) - y(3,800:11220),'bo', t, y(2,:) - y(3,:),'r.');
+plot(t, y(2,:) - y(3,:));
 
-pad = zeros(8*L,1);
-writematrix( [0 t(800:11220)]', "data-12-t.csv");
-writematrix( [pad y(:,800:11220)]', "data-12-x.csv");
-writematrix( [pad yp(:,800:11220)]', "data-12-xdot.csv");
+% 
+% pad = zeros(8*L,1);
+% writematrix( [0 sol.x]', "data-12-t.csv");
+% writematrix( [pad sol.y]', "data-12-x.csv");
+% writematrix( [pad sol.yp]', "data-12-xdot.csv");
 
 %% part 2
 % L = 2; 
