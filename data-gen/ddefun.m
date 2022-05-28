@@ -1,16 +1,29 @@
 %% dydt
 % x is a 8 by 1 vector which is x1 ... x8 
 function dydt = ddefun(t, x, Z, L, c,AF,AB,AL)
-    %function parameters
-    H_e = 3.25/1000;
-    Tao_e = 10; % ms
-    H_i = 29.3/1000;
-    Tao_i = 15; % ms
-    gamma1 = 50;
-    gamma2 = 40;
-    gamma3 = 12;
-    gamma4 = 12;
+
+%    %function parameters 
+%     H_e = 3.25/1000;
+%     Tao_e = 10; % ms
+%     H_i = 29.3/1000;
+%     Tao_i = 15; % ms
+%     gamma1 = 50;
+%     gamma2 = 40;
+%     gamma3 = 12;
+%     gamma4 = 12;
+%     gamma = [gamma1 gamma2 gamma3 gamma4];
+
+%function parameters with +/- 5% gaussian noise
+    H_e = 3.25/1000 + normrnd(0, 0.05*3.25/1000);
+    Tao_e = 10 + normrnd(0, 0.05*10); % ms
+    H_i = 29.3/1000 + normrnd(0, 0.05*29.3/1000);
+    Tao_i = 15 + normrnd(0, 0.05*15); % ms
+    gamma1 = 50 + normrnd(0, 0.05*50);
+    gamma2 = 40 + normrnd(0, 0.05*40);
+    gamma3 = 12 + normrnd(0, 0.05*12);
+    gamma4 = 12 + normrnd(0, 0.05*12);
     gamma = [gamma1 gamma2 gamma3 gamma4];
+
     
     %u - input signal
     t_imp = 10;
