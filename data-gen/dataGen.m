@@ -17,10 +17,15 @@ lags = [delta];
 
 %resample the data to a consistent faster frequency
 fs = 100;
-str = 1;
-ed  = 4000;
+str = 1500;
+ed  = 17000;
 %number of trials simulated
 itr = 100;
+%zero padding
+pad = zeros(8*L,1);
+data_t = zeros(1,1);
+data_x = pad;
+data_xdot = pad;
 
 figure;
 for i = 1:itr
@@ -29,8 +34,8 @@ for i = 1:itr
 
     [tempy, tempt] = resample(sol.y(2,:) - sol.y(3,:),sol.x(:),fs);
 
-    plot(sol.x,sol.y(2,:) - sol.y(3,:));
-    hold on
+    %plot(sol.x,sol.y(2,:) - sol.y(3,:));
+    %hold on
     
     y = zeros(8,length(tempy));
     yp = zeros(8,length(tempy));
@@ -38,15 +43,30 @@ for i = 1:itr
         [y(j,:),t]  = resample(sol.y(j,:), sol.x(:), fs);
         [yp(j,:),t1]  = resample(sol.yp(j,:), sol.x(:), fs);
     end
+
     %sanity checking
     if y(1,:) ~= y(4,:)
         keyboard
+    elseif y(2,:) ~= y(5,:)
+        keyboard
+    elseif y(3,:) ~= y(6,:)
+        keyboard
+    elseif y(7,:) ~= y(8,:)
+        keyboard
     end
-    %800 & 11220 from reading the t value
-    %plot(t(800:11220), y(2,800:11220) - y(3,800:11220),'bo', t, y(2,:) - y(3,:),'r.');
-end
 
-% pad = zeros(8*L,1);
-% writematrix( [0 t(800:11220)]', "data-12-t.csv");
-% writematrix( [pad y(:,800:11220)]', "data-12-x.csv");
-% writematrix( [pad yp(:,800:11220)]', "data-12-xdot.csv");
+    %1500 & 17000 from reading the graph
+    plot(t(1500:17000), y(2,1500:17000) - y(3,1500:17000),'o', t, y(2,:) - y(3,:),'.');
+    hold on
+    
+    %prelocation of the memory for faster speed
+    %only the first iteration will have the 
+
+    data_t = [data_t; t(str:ed)];
+    data_x = [data_x y(:,str:ed)];
+    data_xdot = [data_xdot yp(:,str:ed)];
+end
+ 
+writematrix( data_t, "data-t.csv");
+writematrix( data_x', "data-x.csv");
+writematrix( data_xdot', "data-xdot.csv");
