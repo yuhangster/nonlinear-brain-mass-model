@@ -20,12 +20,19 @@ fs = 100;
 str = 1500;
 ed  = 17000;
 %number of trials simulated
-itr = 100;
+itr = 200;
 %zero padding
 pad = zeros(8*L,1);
-data_t = zeros(1,1);
-data_x = pad;
-data_xdot = pad;
+
+% data_t = zeros(1,1);
+% data_x = pad;
+% data_xdot = pad;
+
+%15502
+len = ed - str +2;
+data_t = zeros(1,len,itr);
+data_x = zeros(8*L,len,itr);
+data_xdot = zeros(8*L,len,itr);
 
 figure;
 for i = 1:itr
@@ -56,17 +63,17 @@ for i = 1:itr
     end
 
     %1500 & 17000 from reading the graph
-    plot(t(1500:17000), y(2,1500:17000) - y(3,1500:17000),'o', t, y(2,:) - y(3,:),'.');
+    plot(t(str:ed), y(2,str:ed) - y(3,str:ed),'o', t, y(2,:) - y(3,:),'.');
     hold on
-    
     %prelocation of the memory for faster speed
     %only the first iteration will have the 
 
-    data_t = [data_t; t(str:ed)];
-    data_x = [data_x y(:,str:ed)];
-    data_xdot = [data_xdot yp(:,str:ed)];
+    data_t(:,:,i) = [0; t(str:ed)]';
+    data_x(:,:,i) = [pad y(:,str:ed)];
+    data_xdot(:,:,i) = [pad yp(:,str:ed)];
+
+    writematrix( data_t(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-data\No." + i +" data-t.csv");
+    writematrix( data_x(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-data\No." + i +" data-x.csv");
+    writematrix( data_xdot(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-data\No." + i +" data-xdot.csv");
 end
  
-writematrix( data_t, "data-t.csv");
-writematrix( data_x', "data-x.csv");
-writematrix( data_xdot', "data-xdot.csv");
