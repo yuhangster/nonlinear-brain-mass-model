@@ -17,10 +17,12 @@ lags = [delta];
 
 %resample the data to a consistent faster frequency
 fs = 100;
-str = 1500;
-ed  = 17000;
+%test 1: ed = 17000; str = 1500
+%test 2: ed = 30000; str = 500
+str = 500;
+ed  = 30000;
 %number of trials simulated
-itr = 200;
+itr = 300;
 %zero padding
 pad = zeros(8*L,1);
 
@@ -65,9 +67,8 @@ for i = 1:itr
     %1500 & 17000 from reading the graph
     plot(t(str:ed), y(2,str:ed) - y(3,str:ed),'o', t, y(2,:) - y(3,:),'.');
     hold on
-    %prelocation of the memory for faster speed
-    %only the first iteration will have the 
 
+    %data generation
     data_t(:,:,i) = [0; t(str:ed)]';
     data_x(:,:,i) = [pad y(:,str:ed)];
     data_xdot(:,:,i) = [pad yp(:,str:ed)];
