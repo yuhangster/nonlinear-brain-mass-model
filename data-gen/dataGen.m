@@ -1,19 +1,28 @@
-%%solve the differential equation in ode 45
+%~~~~~~~~~~~~~~~~~Data Generation V1~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+%This code generates the data for single column
+%The data is saved in  'single-column-data' directory 
+%The outputs consist of three separate csv files for t, x, xdot
+
 clear all;
 close all;
 clc;
-%%sol.y 
-%%sol.yp are x and x_dot
-delta = 10; % ms
-opts = odeset('MaxStep',1);
+
 %% data generation
+%Set the random seed
+arrayNum = 1;
+rng('default')
+rng(arrayNum)
+
+%Parameter Initialization
 L = 1; %L is the total number of columns
 c = initC(L);
 AF = 0;
 AB=0;
 AL=0;
 tspan = [0 400];
+delta = 10; % ms
 lags = [delta];
+opts = odeset('MaxStep',1);
 
 %resample the data to a consistent faster frequency
 fs = 100;
@@ -22,7 +31,7 @@ fs = 100;
 str = 500;
 ed  = 30000;
 %number of trials simulated
-itr = 300;
+itr = 2;
 %zero padding
 pad = zeros(8*L,1);
 
@@ -73,8 +82,8 @@ for i = 1:itr
     data_x(:,:,i) = [pad y(:,str:ed)];
     data_xdot(:,:,i) = [pad yp(:,str:ed)];
 
-    writematrix( data_t(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-data\No." + i +" data-t.csv");
-    writematrix( data_x(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-data\No." + i +" data-x.csv");
-    writematrix( data_xdot(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-data\No." + i +" data-xdot.csv");
+    writematrix( data_t(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataCSV\No." + i +" data-t.csv");
+    writematrix( data_x(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataCSV\No." + i +" data-x.csv");
+    writematrix( data_xdot(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataCSV\No." + i +" data-xdot.csv");
 end
  
