@@ -26,11 +26,11 @@ lags = [delta];
 opts = odeset('MaxStep',1);
 
 %resample the data to a consistent faster frequency
-fs = 100;
+fs = 10;
 %test 1: ed = 17000; str = 1500
 %test 2: ed = 30000; str = 500
-str = 500;
-ed  = 30000;
+str = 50;
+ed  = 3000;
 
 %number of trials simulated
 itr = 2;
