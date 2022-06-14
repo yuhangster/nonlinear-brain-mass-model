@@ -1,34 +1,37 @@
 %% dydt
 % x is a 8 by 1 vector which is x1 ... x8 
-function dydt = ddefun(t, x, Z, L, c,AF,AB,AL)
+function dydt = ddefun(t, x, Z, L, c,AF,AB,AL, U, t_end)
 
-%    %function parameters 
-%     H_e = 3.25/1000;
-%     Tao_e = 10; % ms
-%     H_i = 29.3/1000;
-%     Tao_i = 15; % ms
-%     gamma1 = 50;
-%     gamma2 = 40;
-%     gamma3 = 12;
-%     gamma4 = 12;
-%     gamma = [gamma1 gamma2 gamma3 gamma4];
-
-%function parameters with +/- 5% gaussian noise
-    H_e = 3.25/1000 + normrnd(0, 0.05*3.25/1000);
-    Tao_e = 10 + normrnd(0, 0.05*10); % ms
-    H_i = 29.3/1000 + normrnd(0, 0.05*29.3/1000);
-    Tao_i = 15 + normrnd(0, 0.05*15); % ms
-    gamma1 = 50 + normrnd(0, 0.05*50);
-    gamma2 = 40 + normrnd(0, 0.05*40);
-    gamma3 = 12 + normrnd(0, 0.05*12);
-    gamma4 = 12 + normrnd(0, 0.05*12);
+   %function parameters 
+    H_e = 3.25/1000;
+    Tao_e = 10; % ms
+    H_i = 29.3/1000;
+    Tao_i = 15; % ms
+    gamma1 = 50;
+    gamma2 = 40;
+    gamma3 = 12;
+    gamma4 = 12;
     gamma = [gamma1 gamma2 gamma3 gamma4];
+
+% %function parameters with +/- 5% gaussian noise
+%     H_e = 3.25/1000 + normrnd(0, 0.05*3.25/1000);
+%     Tao_e = 10 + normrnd(0, 0.05*10); % ms
+%     H_i = 29.3/1000 + normrnd(0, 0.05*29.3/1000);
+%     Tao_i = 15 + normrnd(0, 0.05*15); % ms
+%     gamma1 = 50 + normrnd(0, 0.05*50);
+%     gamma2 = 40 + normrnd(0, 0.05*40);
+%     gamma3 = 12 + normrnd(0, 0.05*12);
+%     gamma4 = 12 + normrnd(0, 0.05*12);
+%     gamma = [gamma1 gamma2 gamma3 gamma4];
 
     
     %u - input signal
-    t_imp = 10;
-    t_end = 2500;
-    u = interpU(t_imp, t_end, t);
+    %t_imp = 10;
+    %U as an impulse at 10ms
+    %u = interpU(t_imp, t_end, t);
+    %disp(length(u))
+    %u as a gaussian noise with 0 mean and 0.05 standard deviation
+    u = interpNoise(U, t_end, t);
     %u  = interpRd(t_end,t);
     
     dydt = zeros(8*L,1);
@@ -73,7 +76,7 @@ end
 %          t = time of the estimation
 %   output: the interpolate delta function at t 
 function signal = interpU(t_imp, t_end, t)
-    ts = t_imp; %ts means a impulse at (ts) second
+    ts = t_imp; %ts means a impulse at (ts) millisecond
     ft = 0:1:t_end;
     u = zeros(1,length(ft));
     u((ts/1)+1) = 1;     % set Inf to finite value
@@ -81,6 +84,15 @@ function signal = interpU(t_imp, t_end, t)
     %     if signal ~= 0
     %         keyboard
     %     end
+end
+
+% Interpolation of the gaussian noise (0 mean 0.05 standard deviation)function
+%   input: t_end = duration of the signal from 0 (ms)
+%          t = time of the estimation
+%   output: the interpolate delta function at t 
+function signal = interpNoise(U, t_end, t)
+    ft = 0:1:t_end;
+    signal = interp1(ft, U, t, 'nearest');
 end
 
 function rd = interpRd(t_end,t)
@@ -99,5 +111,4 @@ function fr = S(x)
     r = 0.56;
     fr = -e0 + 2*e0/(1+exp(-r*x));
 end
-
 

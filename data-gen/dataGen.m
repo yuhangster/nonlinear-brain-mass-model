@@ -12,6 +12,10 @@ clc;
 arrayNum = 1;
 rng('default')
 rng(arrayNum)
+%noisy input U
+t_end = 2500;
+ft = 0:1:t_end;
+u = normrnd(0,0.05,[1,length(ft)]);
 
 %Parameter Initialization
 L = 1; %L is the total number of columns
@@ -19,7 +23,7 @@ c = initC(L);
 AF = 0;
 AB=0;
 AL=0;
-tspan = [0 400];
+tspan = [0 t_end];
 delta = 10; % ms
 lags = [delta];
 opts = odeset('MaxStep',1);
@@ -28,8 +32,8 @@ opts = odeset('MaxStep',1);
 fs = 100;
 %test 1: ed = 17000; str = 1500
 %test 2: ed = 30000; str = 500
-str = 500;
-ed  = 30000;
+str = 50;
+ed  = t_end*100-2000;
 %number of trials simulated
 itr = 2;
 %zero padding
@@ -48,7 +52,7 @@ data_xdot = zeros(8*L,len,itr);
 figure;
 for i = 1:itr
     % c = 2 case
-    sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2,:),AF,AB,AL), lags, @(t) history(t,L), tspan, opts);
+    sol = dde23(@(t,x,Z) ddefun(t, x, Z, L, c(2,:),AF,AB,AL, u, t_end), lags, @(t) history(t,L), tspan, opts);
 
     [tempy, tempt] = resample(sol.y(2,:) - sol.y(3,:),sol.x(:),fs);
 
@@ -63,27 +67,34 @@ for i = 1:itr
     end
 
     %sanity checking
-    if y(1,:) ~= y(4,:)
-        keyboard
-    elseif y(2,:) ~= y(5,:)
-        keyboard
-    elseif y(3,:) ~= y(6,:)
-        keyboard
-    elseif y(7,:) ~= y(8,:)
-        keyboard
-    end
+%     if y(1,:) ~= y(4,:)
+%         keyboard
+%     elseif y(2,:) ~= y(5,:)
+%         keyboard
+%     elseif y(3,:) ~= y(6,:)
+%         keyboard
+%     elseif y(7,:) ~= y(8,:)
+%         keyboard
+%     end
 
     %1500 & 17000 from reading the graph
     plot(t(str:ed), y(2,str:ed) - y(3,str:ed),'o', t, y(2,:) - y(3,:),'.');
     hold on
 
     %data generation
-    data_t(:,:,i) = [0; t(str:ed)]';
-    data_x(:,:,i) = [pad y(:,str:ed)];
-    data_xdot(:,:,i) = [pad yp(:,str:ed)];
-
-    writematrix( data_t(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataCSV\No." + i +" data-t.csv");
-    writematrix( data_x(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataCSV\No." + i +" data-x.csv");
-    writematrix( data_xdot(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataCSV\No." + i +" data-xdot.csv");
+%     data_t(:,:,i) = [0; t(str:ed)]';
+%     data_x(:,:,i) = [pad y(:,str:ed)];
+%     data_xdot(:,:,i) = [pad yp(:,str:ed)];
+% 
+%     writematrix( data_t(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataCSV\No." + i +" data-t.csv");
+%     writematrix( data_x(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataCSV\No." + i +" data-x.csv");
+%     writematrix( data_xdot(:,:,i)', "C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataCSV\No." + i +" data-xdot.csv");
 end
+
  
+if ~isfolder('data-noisyIn')
+    mkdir('data-noisyIn')
+end
+
+fNameOut = ['data_' num2str(arrayNum)];
+save(fullfile('data-noisyIn', fNameOut), 'data_t', 'data_x', 'data_xdot')
