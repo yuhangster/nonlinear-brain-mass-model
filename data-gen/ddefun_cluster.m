@@ -1,6 +1,6 @@
 %% dydt
 % x is a 8 by 1 vector which is x1 ... x8 
-function dydt = ddefun(t, x, Z, L, c,AF,AB,AL)
+function dydt = ddefun_cluster(t, x, Z, L, c,AF,AB,AL, U, t_end)
 
    %function parameters 
     H_e = 3.25/1000;
@@ -26,14 +26,13 @@ function dydt = ddefun(t, x, Z, L, c,AF,AB,AL)
 
     
     %u - input signal
-    t_imp = 10;
-    t_end = 3000;
+    %t_imp = 10;
     %U as an impulse at 10ms
-    u = interpU(t_imp, t_end, t);
+    %u = interpU(t_imp, t_end, t);
     
     %disp(length(u))
     %%u as a gaussian noise with 0 mean and 0.05 standard deviation
-    %u = interpNoise(U, t_end, t);
+    u = interpNoise(U, t_end, t);
     %%u  = interpRd(t_end,t);
     
     dydt = zeros(8*L,1);
@@ -113,3 +112,4 @@ function fr = S(x)
     r = 0.56;
     fr = -e0 + 2*e0/(1+exp(-r*x));
 end
+

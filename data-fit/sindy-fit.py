@@ -33,8 +33,8 @@ xdot_train = []
 
 #for every arrayNum
 for i in range (1,arrayNum+1):
+    mat = scipy.io.loadmat(r'C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataMat\data_'+str(i)+'.mat')
     for j in range (trial):
-        mat = scipy.io.loadmat(r'C:\Users\l2016\GitHub\nonlinear-brain-mass-model\data-gen\single-column-dataMat\data_'+str(i)+'.mat')
         #get the data
         tp_t = mat.get("data_t")
         tp_x = mat.get("data_x")
