@@ -10,7 +10,7 @@ class Net(torch.nn.Module):
 		self.inputDim = 2
 		self.outputDim = 1
 
-		self.layer = nn.Linear(self.inputDim, self.outputDim)
+		self.layer = nn.Linear(self.inputDim, self.outputDim,bias = False)
 
 		# Freeze weights in layer
 
@@ -41,13 +41,17 @@ for i in range(10):
 	loss = loss_function(net.forward(x), y)
 	loss.backward()
 	
-	j = 1
-	for param in net.parameters():
-		#print(param.grad)
-		if j == 1:
-			param.grad[0,1:3] = 0
-			j += 1
+	#for Bias term
+	#j = 1
+	# for param in net.parameters():
+	# 	print(param.grad.shape)
+	# 	#if j == 1:
+	# 		# param.grad[0,1:] = 0
+	# 		# j += 1
+	# 	param.grad[0,1:] = 0
 
+	print(net.parameters.shape)
+	net.parameters.grad[0,1:] = 0
 	
 	optimizer.step()
 	print(i,' : ',list(net.parameters()))

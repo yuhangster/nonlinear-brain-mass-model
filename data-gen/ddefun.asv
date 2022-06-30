@@ -1,4 +1,4 @@
-es4eoooo%% dydt
+es4e%% dydt
 % x is a 8 by 1 vector which is x1 ... x8 
 function dydt = ddefun(t, x, Z, L, c,AF,AB,AL)
 

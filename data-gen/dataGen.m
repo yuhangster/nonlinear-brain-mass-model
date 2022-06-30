@@ -102,7 +102,7 @@ clc;
 %% Data generation Part 4 fixed AB
 
 %noisy input U
-t_end = 2500;
+t_end = 1000;
 ft = 0:1:t_end;
 
 % model parameter initialization
@@ -117,22 +117,24 @@ AB(:,:,2) = [0 10; 0 0];
 AB(:,:,3) = [0 25; 0 0];
 AB(:,:,4) = [0 50; 0 0];
 AL = zeros(L,L);
-delta = 10;
+%change the lags to be 0
+%lag have to be positive, choose a small positive instead
+delta = 0.00001;
 lags = [delta];
 opts = odeset('MaxStep',1);
 
 %simulation parameter initializaiton
-fs = 100;
+fs = 10;
 str = 100; % the start index
-ed = t_end*100 -200; % the end index (200 is selected randomly)
+ed = t_end*fs-10; % the end index (10 is selected randomly)
 itr = 10;
 
 %zero padding
 pad = zeros(8*L,1);
-len = ed - str +2;
-data_t = zeros(1,len,itr);
-data_x = zeros(8*L,len,itr);
-data_xdot = zeros(8*L,len,itr);
+len = ed - str +1;
+data_t = zeros(len,1,itr);
+data_x = zeros(len,8*L,itr);
+data_xdot = zeros(len,8*L,itr);
 
 figure;
 for i  = 1:itr
@@ -143,9 +145,23 @@ for i  = 1:itr
     u = normrnd(0,0.05,[1,length(ft)]);
     %AB --4th case
     sol = dde23(@(t,x,Z) ddefun_cluster(t, x, Z, L, c(2,:),AF,AB(:,:,4),AL, u, t_end), lags, @(t) history(t,L), tspan, opts);
+    
+    [tempy, tempt] = resample(sol.y(2,:) - sol.y(3,:),sol.x(:),fs);
+    y = zeros(16,length(tempy));
+    yp = zeros(16,length(tempy));
+    for j = 1:16
+        [y(j,:),t]  = resample(sol.y(j,:), sol.x(:), fs);
+        [yp(j,:),t1]  = resample(sol.yp(j,:), sol.x(:), fs);
+    end
+
     plot(sol.x, (sol.y(2,:) - sol.y(3,:)),'r', sol.x, (sol.y(10,:) - sol.y(11,:)),'k');
     hold on 
     title('AB = ', AB(1,2,4));
+
+    %data generation
+    data_t(:,:,i) = t(str:ed);
+    data_x(:,:,i) = y(:,str:ed)';
+    data_xdot(:,:,i) = yp(:,str:ed)';
 end
 hold off
 

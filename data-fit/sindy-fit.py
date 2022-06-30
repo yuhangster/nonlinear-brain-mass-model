@@ -26,7 +26,7 @@ from sklearn.linear_model import Lasso
 
 #use the trial 1 to 7 the training data
 arrayNum = 2
-trial = 100
+trial = 1
 t_train = [] 
 x_train = []
 xdot_train = []
